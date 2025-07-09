@@ -253,18 +253,45 @@
 
                 // Add click handler to image container for non-hotspot clicks
                 const imageContainer = document.querySelector('.image-container:last-child');
+                console.log('Setting up click handler for image container:', imageContainer);
+                
+                // Also add click handler to the image itself
+                const image = imageContainer.querySelector('img');
+                console.log('Setting up click handler for image:', image);
+                
                 imageContainer.addEventListener('click', function(e) {
+                    console.log('Click detected on image container, target:', e.target);
+                    console.log('Target classes:', e.target.classList);
+                    
                     // Check if the click was on a hotspot
                     if (e.target.classList.contains('hotspot')) {
+                        console.log('Click was on hotspot, letting hotspot handler deal with it');
                         return; // Let the hotspot handler deal with it
                     }
                     
                     // Click was on non-hotspot area, play noDiff audio
+                    console.log('Click was on non-hotspot area, playing notDiff audio');
                     const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
                     audio.play().catch(e => console.log('Audio play error:', e));
                     
                     // Log the non-hotspot click
                     console.log('Clicked on non-hotspot area');
+                });
+                
+                // Also add click handler directly to the image
+                image.addEventListener('click', function(e) {
+                    console.log('Click detected directly on image');
+                    
+                    // Check if the click was on a hotspot (shouldn't happen, but just in case)
+                    if (e.target.classList.contains('hotspot')) {
+                        console.log('Click was on hotspot, letting hotspot handler deal with it');
+                        return;
+                    }
+                    
+                    // Click was on non-hotspot area, play noDiff audio
+                    console.log('Click was on image (non-hotspot), playing notDiff audio');
+                    const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                    audio.play().catch(e => console.log('Audio play error:', e));
                 });
 
                 // Start timer
