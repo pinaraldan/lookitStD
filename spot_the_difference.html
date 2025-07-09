@@ -144,7 +144,7 @@
                 // Preload images
                 const images = [
                     'img/left.png' + cacheBuster,
-                    'img/1.png' + cacheBuster
+                    'img/right.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
@@ -200,7 +200,7 @@
                         <div class="image-container">
                             <div class="image-label">Find the Differences</div>
                             <div style="position: relative; display: inline-block;">
-                                <img src="img/1.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <img src="img/right.png${cacheBuster}" class="comparison-image" alt="Modified">
                                 ${differences.map(diff => `
                                     <div class="hotspot ${diff.found ? 'found' : ''}" 
                                          id="hotspot-${diff.id}"
