@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Access Test</title>
+</head>
+<body>
+    <h1>Testing File Access</h1>
+    
+    <h2>Images Test:</h2>
+    <p>Image 1:</p>
+    <img src="img/1.png" alt="Image 1" style="width: 100px; height: 100px;">
+    
+    <p>Left Image:</p>
+    <img src="img/left.png" alt="Left Image" style="width: 200px; height: 200px;">
+    
+    <h2>Audio Test:</h2>
+    <p>Click to test audio:</p>
+    <button onclick="testAudio('mp3/correct.mp3')">Test Correct Audio</button>
+    <button onclick="testAudio('mp3/notDiff.mp3')">Test NotDiff Audio</button>
+    <button onclick="testAudio('mp3/gotItAlready.mp3')">Test GotItAlready Audio</button>
+    
+    <h2>Console Log:</h2>
+    <div id="log"></div>
+    
+    <script>
+        function testAudio(src) {
+            console.log('Testing audio:', src);
+            document.getElementById('log').innerHTML += '<p>Testing: ' + src + '</p>';
+            
+            const audio = new Audio(src);
+            audio.onloadstart = () => console.log('Audio loading started:', src);
+            audio.oncanplay = () => console.log('Audio can play:', src);
+            audio.onerror = (e) => console.log('Audio error:', src, e);
+            audio.play().catch(e => console.log('Play error:', src, e));
+        }
+        
+        // Test image loading
+        const img1 = new Image();
+        img1.onload = () => console.log('Image 1 loaded successfully');
+        img1.onerror = () => console.log('Image 1 failed to load');
+        img1.src = 'img/1.png';
+        
+        const leftImg = new Image();
+        leftImg.onload = () => console.log('Left image loaded successfully');
+        leftImg.onerror = () => console.log('Left image failed to load');
+        leftImg.src = 'img/left.png';
+    </script>
+</body>
+</html> 
