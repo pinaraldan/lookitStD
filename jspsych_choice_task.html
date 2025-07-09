@@ -68,6 +68,9 @@
     <div id="jspsych-target"></div>
 
     <script>
+        // Add cache-busting parameter
+        const cacheBuster = '?v=' + Date.now();
+        
         // Initialize jsPsych
         const jsPsych = initJsPsych({
             on_finish: function() {
@@ -86,33 +89,43 @@
             choices: [],
             trial_duration: 1000,
             on_load: function() {
+                console.log('Preloading files...');
+                
                 // Preload images
                 const images = [
-                    'img/left.png',
-                    'img/1.png',
-                    'img/2.png',
-                    'img/3.png',
-                    'img/4.png',
-                    'img/5.png',
-                    'img/6.png',
-                    'img/7.png',
-                    'img/8.png',
-                    'img/9.png'
+                    'img/left.png' + cacheBuster,
+                    'img/1.png' + cacheBuster,
+                    'img/2.png' + cacheBuster,
+                    'img/3.png' + cacheBuster,
+                    'img/4.png' + cacheBuster,
+                    'img/5.png' + cacheBuster,
+                    'img/6.png' + cacheBuster,
+                    'img/7.png' + cacheBuster,
+                    'img/8.png' + cacheBuster,
+                    'img/9.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
                     const img = new Image();
+                    img.onload = () => console.log('Image loaded:', src);
+                    img.onerror = () => console.log('Image failed to load:', src);
                     img.src = src;
                 });
 
                 // Preload audio
-                const correctAudio = new Audio('mp3/correct.mp3');
+                const correctAudio = new Audio('mp3/correct.mp3' + cacheBuster);
+                correctAudio.oncanplay = () => console.log('Correct audio loaded');
+                correctAudio.onerror = () => console.log('Correct audio failed to load');
                 correctAudio.load();
                 
-                const gotItAlreadyAudio = new Audio('mp3/gotItAlready.mp3');
+                const gotItAlreadyAudio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                gotItAlreadyAudio.oncanplay = () => console.log('GotItAlready audio loaded');
+                gotItAlreadyAudio.onerror = () => console.log('GotItAlready audio failed to load');
                 gotItAlreadyAudio.load();
                 
-                const notDiffAudio = new Audio('mp3/notDiff.mp3');
+                const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                notDiffAudio.oncanplay = () => console.log('NotDiff audio loaded');
+                notDiffAudio.onerror = () => console.log('NotDiff audio failed to load');
                 notDiffAudio.load();
             }
         };
@@ -138,36 +151,37 @@
         const choice_task = {
             type: jsPsychHtmlButtonResponse,
             stimulus: function() {
+                console.log('Rendering main task...');
                 return `
                     <div class="main-container">
-                        <img src="img/left.png" class="left-image">
+                        <img src="img/left.png${cacheBuster}" class="left-image" onload="console.log('Left image loaded')" onerror="console.log('Left image failed')">
                         <div class="image-grid">
                             <div class="image-container">
-                                <img id="img-1" src="img/1.png" class="choice-image" data-id="1">
+                                <img id="img-1" src="img/1.png${cacheBuster}" class="choice-image" data-id="1" onload="console.log('Image 1 loaded')" onerror="console.log('Image 1 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-2" src="img/2.png" class="choice-image" data-id="2">
+                                <img id="img-2" src="img/2.png${cacheBuster}" class="choice-image" data-id="2" onload="console.log('Image 2 loaded')" onerror="console.log('Image 2 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-3" src="img/3.png" class="choice-image" data-id="3">
+                                <img id="img-3" src="img/3.png${cacheBuster}" class="choice-image" data-id="3" onload="console.log('Image 3 loaded')" onerror="console.log('Image 3 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-4" src="img/4.png" class="choice-image" data-id="4">
+                                <img id="img-4" src="img/4.png${cacheBuster}" class="choice-image" data-id="4" onload="console.log('Image 4 loaded')" onerror="console.log('Image 4 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-5" src="img/5.png" class="choice-image" data-id="5">
+                                <img id="img-5" src="img/5.png${cacheBuster}" class="choice-image" data-id="5" onload="console.log('Image 5 loaded')" onerror="console.log('Image 5 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-6" src="img/6.png" class="choice-image" data-id="6">
+                                <img id="img-6" src="img/6.png${cacheBuster}" class="choice-image" data-id="6" onload="console.log('Image 6 loaded')" onerror="console.log('Image 6 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-7" src="img/7.png" class="choice-image" data-id="7">
+                                <img id="img-7" src="img/7.png${cacheBuster}" class="choice-image" data-id="7" onload="console.log('Image 7 loaded')" onerror="console.log('Image 7 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-8" src="img/8.png" class="choice-image" data-id="8">
+                                <img id="img-8" src="img/8.png${cacheBuster}" class="choice-image" data-id="8" onload="console.log('Image 8 loaded')" onerror="console.log('Image 8 failed')">
                             </div>
                             <div class="image-container">
-                                <img id="img-9" src="img/9.png" class="choice-image" data-id="9">
+                                <img id="img-9" src="img/9.png${cacheBuster}" class="choice-image" data-id="9" onload="console.log('Image 9 loaded')" onerror="console.log('Image 9 failed')">
                             </div>
                         </div>
                     </div>
@@ -178,6 +192,8 @@
             choices: [], // No buttons, we'll handle clicks manually
             trial_duration: 60000, // 60 seconds
             on_load: function() {
+                console.log('Main task loaded, setting up click handlers...');
+                
                 // Initialize state
                 jsPsych.data.addProperties({
                     found_images: [],
@@ -186,6 +202,7 @@
 
                 // Add click handlers
                 const images = document.querySelectorAll('.choice-image');
+                console.log('Found', images.length, 'images to add click handlers to');
                 images.forEach(img => {
                     img.addEventListener('click', function() {
                         const imageId = this.getAttribute('data-id');
@@ -220,8 +237,8 @@
                     foundImages.push(imageId);
                     
                     // Play correct audio
-                    const audio = new Audio('mp3/correct.mp3');
-                    audio.play();
+                    const audio = new Audio('mp3/correct.mp3' + cacheBuster);
+                    audio.play().catch(e => console.log('Audio play error:', e));
                     
                     // Update data
                     jsPsych.data.addProperties({
@@ -239,8 +256,8 @@
                     // Already clicked this image before
                     
                     // Play "got it already" audio
-                    const audio = new Audio('mp3/gotItAlready.mp3');
-                    audio.play();
+                    const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                    audio.play().catch(e => console.log('Audio play error:', e));
                     
                     // Update data
                     jsPsych.data.addProperties({
@@ -262,8 +279,8 @@
                 console.log('Wrong image clicked:', imageId);
                 
                 // Play notDiff audio
-                const audio = new Audio('mp3/notDiff.mp3');
-                audio.play();
+                const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
                 
                 // Update data
                 jsPsych.data.addProperties({
@@ -313,6 +330,7 @@
         }
 
         // Run the experiment
+        console.log('Starting jsPsych experiment...');
         jsPsych.run(timeline);
     </script>
 </body>
