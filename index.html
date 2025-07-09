@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lookit Study Development</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .experiment-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .experiment-link:hover {
+            background-color: #0056b3;
+        }
+        .description {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .files {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Lookit Study Development</h1>
+        <p>Research materials and experiments</p>
+    </div>
+
+    <div class="description">
+        <h2>Choice Task Experiment</h2>
+        <p>This is a jsPsych-based choice task where participants need to find 6 special images (1-6) among 9 total images.</p>
+        <ul>
+            <li><strong>Correct images:</strong> 1, 2, 3, 4, 5, 6</li>
+            <li><strong>Incorrect images:</strong> 7, 8, 9</li>
+            <li><strong>Time limit:</strong> 60 seconds</li>
+            <li><strong>Audio feedback:</strong> Different sounds for first clicks, repeat clicks, and incorrect images</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="jspsych_choice_task.html" class="experiment-link">Start the Experiment</a>
+    </div>
+
+    <div class="files">
+        <h3>Available Files</h3>
+        <ul>
+            <li><strong>jspsych_choice_task.html</strong> - Main experiment file</li>
+            <li><strong>manifest.json</strong> - Lookit study manifest</li>
+            <li><strong>img/</strong> - Image files (1.png, 2.png, etc.)</li>
+            <li><strong>mp3/</strong> - Audio files (correct.mp3, notDiff.mp3, gotItAlready.mp3)</li>
+            <li><strong>ogg/</strong> - Alternative audio format files</li>
+        </ul>
+    </div>
+
+    <div class="description">
+        <h3>How to Use</h3>
+        <p>Click the "Start the Experiment" button above to begin the choice task. The experiment will run for 60 seconds, during which you can click on any image. Correct images (1-6) will play different audio feedback depending on whether it's your first or repeat click on that image.</p>
+    </div>
+</body>
+</html> 
