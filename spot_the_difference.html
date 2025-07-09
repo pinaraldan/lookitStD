@@ -67,9 +67,7 @@
             .timer {
                 font-size: 18px;
             }
-            .found-count {
-                font-size: 14px;
-            }
+
         }
         .hotspot {
             position: absolute;
@@ -96,13 +94,7 @@
             font-weight: bold;
             color: #333;
         }
-        .found-count {
-            position: fixed;
-            top: 60px;
-            right: 20px;
-            font-size: 18px;
-            color: #666;
-        }
+
         .instructions {
             text-align: center;
             max-width: 800px;
@@ -135,11 +127,7 @@
         ];
         
         // Initialize jsPsych
-        const jsPsych = initJsPsych({
-            on_finish: function() {
-                displayResults();
-            }
-        });
+        const jsPsych = initJsPsych();
 
         // Timeline
         const timeline = [];
@@ -177,10 +165,7 @@
                 gotItAlreadyAudio.onerror = () => console.log('GotItAlready audio failed to load');
                 gotItAlreadyAudio.load();
                 
-                const noDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
-                noDiffAudio.oncanplay = () => console.log('NoDiff audio loaded');
-                noDiffAudio.onerror = () => console.log('NoDiff audio failed to load');
-                noDiffAudio.load();
+
             }
         };
         timeline.push(preload);
@@ -227,7 +212,6 @@
                         </div>
                     </div>
                     <div class="timer" id="timer">60</div>
-                    <div class="found-count" id="found-count">Found: 0/6</div>
                 `;
             },
             choices: [], // No buttons, we'll handle clicks manually
@@ -251,48 +235,7 @@
                     });
                 });
 
-                // Add click handler to image container for non-hotspot clicks
-                const imageContainer = document.querySelector('.image-container:last-child');
-                console.log('Setting up click handler for image container:', imageContainer);
-                
-                // Also add click handler to the image itself
-                const image = imageContainer.querySelector('img');
-                console.log('Setting up click handler for image:', image);
-                
-                imageContainer.addEventListener('click', function(e) {
-                    console.log('Click detected on image container, target:', e.target);
-                    console.log('Target classes:', e.target.classList);
-                    
-                    // Check if the click was on a hotspot
-                    if (e.target.classList.contains('hotspot')) {
-                        console.log('Click was on hotspot, letting hotspot handler deal with it');
-                        return; // Let the hotspot handler deal with it
-                    }
-                    
-                    // Click was on non-hotspot area, play noDiff audio
-                    console.log('Click was on non-hotspot area, playing notDiff audio');
-                    const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
-                    audio.play().catch(e => console.log('Audio play error:', e));
-                    
-                    // Log the non-hotspot click
-                    console.log('Clicked on non-hotspot area');
-                });
-                
-                // Also add click handler directly to the image
-                image.addEventListener('click', function(e) {
-                    console.log('Click detected directly on image');
-                    
-                    // Check if the click was on a hotspot (shouldn't happen, but just in case)
-                    if (e.target.classList.contains('hotspot')) {
-                        console.log('Click was on hotspot, letting hotspot handler deal with it');
-                        return;
-                    }
-                    
-                    // Click was on non-hotspot area, play noDiff audio
-                    console.log('Click was on image (non-hotspot), playing notDiff audio');
-                    const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
-                    audio.play().catch(e => console.log('Audio play error:', e));
-                });
+
 
                 // Start timer
                 startTimer();
@@ -335,8 +278,7 @@
                     was_first_click: true
                 });
                 
-                // Update found count display
-                document.getElementById('found-count').textContent = `Found: ${foundDifferences.length}/6`;
+
                 
                 console.log(`First click on difference ${diffId}. Total found: ${foundDifferences.length}`);
             } else {
@@ -382,24 +324,7 @@
             }, 1000);
         }
 
-        // Function to display results
-        function displayResults() {
-            const data = jsPsych.data.get().values()[0];
-            const foundDifferences = data.found_differences || [];
-            
-            const resultsHtml = `
-                <div class="instructions">
-                    <h2>Task Complete!</h2>
-                    <p>You found ${foundDifferences.length} out of 6 differences.</p>
-                    <p>Differences found: ${foundDifferences.join(', ') || 'None'}</p>
-                    <p>Time taken: ${Math.round((data.end_time - data.start_time) / 1000)} seconds</p>
-                    <h3>All Data:</h3>
-                    <pre>${JSON.stringify(data, null, 2)}</pre>
-                </div>
-            `;
-            
-            document.getElementById('jspsych-target').innerHTML = resultsHtml;
-        }
+
 
         // Run the experiment
         console.log('Starting spot-the-difference experiment...');
