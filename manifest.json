@@ -1,0 +1,231 @@
+{
+  "frames": {
+    "test-trials": {
+      "kind": "exp-frame-select",
+      "frameOptions": [
+        {
+          "kind": "exp-lookit-images-audio",
+          "audio": "start",
+          "id": "3H-trials",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "1.png", "top": 10, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '1') { return frameIndex + 1; } else if (frameData.selectedImage == '2') { return frameIndex + 2; } else if (frameData.selectedImage == '3') { return frameIndex + 3; } else if (frameData.selectedImage == '4') { return frameIndex + 4; } else if (frameData.selectedImage == '5') { return frameIndex + 5; } else if (frameData.selectedImage == '6') { return frameIndex + 6; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '2') { return frameIndex + 1; } else if (frameData.selectedImage == '3') { return frameIndex + 2; } else if (frameData.selectedImage == '4') { return frameIndex + 3; } else if (frameData.selectedImage == '5') { return frameIndex + 4; } else if (frameData.selectedImage == '6') { return frameIndex + 5; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-2-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "found.png", "top": 10, "left": 66, "width": 16, "nonChoiceOption": true },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '3') { return frameIndex + 1; } else if (frameData.selectedImage == '4') { return frameIndex + 2; } else if (frameData.selectedImage == '5') { return frameIndex + 3; } else if (frameData.selectedImage == '6') { return frameIndex + 4; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-3-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "found.png", "top": 10, "left": 82, "width": 16, "nonChoiceOption": true },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '2') { return frameIndex + 1; } else if (frameData.selectedImage == '4') { return frameIndex + 2; } else if (frameData.selectedImage == '5') { return frameIndex + 3; } else if (frameData.selectedImage == '6') { return frameIndex + 4; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-4-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "found.png", "top": 38, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '2') { return frameIndex + 2; } else if (frameData.selectedImage == '3') { return frameIndex + 1; } else if (frameData.selectedImage == '5') { return frameIndex + 3; } else if (frameData.selectedImage == '6') { return frameIndex + 4; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-5-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "found.png", "top": 38, "left": 66, "width": 16, "nonChoiceOption": true },
+            { "id": "6", "src": "6.png", "top": 38, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '2') { return frameIndex + 3; } else if (frameData.selectedImage == '3') { return frameIndex + 2; } else if (frameData.selectedImage == '4') { return frameIndex + 1; } else if (frameData.selectedImage == '6') { return frameIndex + 4; } else { return frameIndex; } }"
+        },
+        {
+          "kind": "exp-lookit-images-audio",
+          "id": "3H-trials-1-6-found",
+          "images": [
+            { "id": "1-static", "src": "left.png", "top": 10, "left": 1, "width": 48, "nonChoiceOption": true },
+            { "id": "1", "src": "found.png", "top": 10, "left": 50, "width": 16, "nonChoiceOption": true },
+            { "id": "2", "src": "2.png", "top": 10, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "3", "src": "3.png", "top": 10, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "4", "src": "4.png", "top": 38, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "5", "src": "5.png", "top": 38, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "correct" },
+            { "id": "6", "src": "found.png", "top": 38, "left": 82, "width": 16, "nonChoiceOption": true },
+            { "id": "7", "src": "7.png", "top": 66, "left": 50, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "8", "src": "8.png", "top": 66, "left": 66, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" },
+            { "id": "9", "src": "9.png", "top": 66, "left": 82, "width": 16, "choiceAllowed": true, "feedbackAudio": "notDiff" }
+          ],
+          "parentTextBlock": {
+            "css": { "font-size": "1em" },
+            "text": "Please don't respond to anything on the screen or say whether you agree with your child's response!",
+            "title": "For parents"
+          },
+          "baseDir": "https://raw.githubusercontent.com/pinaraldan/lookitStD/master/",
+          "audioTypes": ["mp3", "ogg"],
+          "backgroundColor": "black",
+          "autoProceed": true,
+          "doRecording": true,
+          "showReplayButton": true,
+          "showPreviousButton": true,
+          "choiceRequired": true,
+          "canMakeChoiceBeforeAudioFinished": false,
+          "selectNextFrame": "function(frames, frameIndex, frameData, expData, sequence, child, pastSessions) { if (frameData.selectedImage == '2') { return frameIndex + 4; } else if (frameData.selectedImage == '3') { return frameIndex + 3; } else if (frameData.selectedImage == '4') { return frameIndex + 2; } else if (frameData.selectedImage == '5') { return frameIndex + 1; } else { return frameIndex; } }"
+        }
+      ],
+      "generateProperties": "function(expData, sequence, child, pastSessions) { return { 'whichFrames': [0, 1, 2, 3, 4, 5, 6] }; }"
+    }
+  },
+  "sequence": [
+    "test-trials"
+  ]
+} 
