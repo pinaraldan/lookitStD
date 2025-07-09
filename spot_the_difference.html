@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Spot the Difference Task</title>
+    <script src="https://unpkg.com/jspsych@8.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@2.0.0"></script>
+    <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
+    <style>
+        .image-comparison {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .image-container {
+            position: relative;
+            text-align: center;
+        }
+        .comparison-image {
+            max-width: 500px;
+            max-height: 400px;
+            border: 2px solid #ccc;
+        }
+        .hotspot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 0, 0.3);
+            border: 2px solid yellow;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .hotspot:hover {
+            background: rgba(255, 255, 0, 0.5);
+            transform: scale(1.1);
+        }
+        .hotspot.found {
+            background: rgba(0, 255, 0, 0.5);
+            border-color: green;
+            cursor: default;
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .found-count {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+        .instructions {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .image-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="jspsych-target"></div>
+
+    <script>
+        // Add cache-busting parameter
+        const cacheBuster = '?v=' + Date.now();
+        
+        // Define the differences (hotspots) - you can adjust these coordinates
+        const differences = [
+            { id: 1, x: 100, y: 150, found: false },
+            { id: 2, x: 250, y: 200, found: false },
+            { id: 3, x: 400, y: 100, found: false },
+            { id: 4, x: 150, y: 300, found: false },
+            { id: 5, x: 350, y: 250, found: false },
+            { id: 6, x: 200, y: 350, found: false }
+        ];
+        
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                displayResults();
+            }
+        });
+
+        // Timeline
+        const timeline = [];
+
+        // Preload images and audio
+        const preload = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: 'Loading...',
+            choices: [],
+            trial_duration: 1000,
+            on_load: function() {
+                console.log('Preloading files...');
+                
+                // Preload images
+                const images = [
+                    'img/left.png' + cacheBuster,
+                    'img/1.png' + cacheBuster
+                ];
+                
+                images.forEach(src => {
+                    const img = new Image();
+                    img.onload = () => console.log('Image loaded:', src);
+                    img.onerror = () => console.log('Image failed to load:', src);
+                    img.src = src;
+                });
+
+                // Preload audio
+                const correctAudio = new Audio('mp3/correct.mp3' + cacheBuster);
+                correctAudio.oncanplay = () => console.log('Correct audio loaded');
+                correctAudio.onerror = () => console.log('Correct audio failed to load');
+                correctAudio.load();
+                
+                const gotItAlreadyAudio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                gotItAlreadyAudio.oncanplay = () => console.log('GotItAlready audio loaded');
+                gotItAlreadyAudio.onerror = () => console.log('GotItAlready audio failed to load');
+                gotItAlreadyAudio.load();
+            }
+        };
+        timeline.push(preload);
+
+        // Instructions
+        const instructions = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Spot the Difference</h2>
+                    <p>Look at the two images side by side and find the differences!</p>
+                    <p>Click on the differences in the right image to mark them as found.</p>
+                    <p>You have 60 seconds to find all 6 differences.</p>
+                    <p>Click "Start" to begin.</p>
+                </div>
+            `,
+            choices: ['Start']
+        };
+        timeline.push(instructions);
+
+        // Main spot-the-difference task
+        const spot_difference_task = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function() {
+                console.log('Rendering spot-the-difference task...');
+                return `
+                    <div class="image-comparison">
+                        <div class="image-container">
+                            <div class="image-label">Original Image</div>
+                            <img src="img/left.png${cacheBuster}" class="comparison-image" alt="Original">
+                        </div>
+                        <div class="image-container">
+                            <div class="image-label">Find the Differences</div>
+                            <div style="position: relative; display: inline-block;">
+                                <img src="img/1.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                ${differences.map(diff => `
+                                    <div class="hotspot ${diff.found ? 'found' : ''}" 
+                                         id="hotspot-${diff.id}"
+                                         style="left: ${diff.x}px; top: ${diff.y}px;"
+                                         data-id="${diff.id}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer" id="timer">60</div>
+                    <div class="found-count" id="found-count">Found: 0/6</div>
+                `;
+            },
+            choices: [], // No buttons, we'll handle clicks manually
+            trial_duration: 60000, // 60 seconds
+            on_load: function() {
+                console.log('Spot-the-difference task loaded, setting up click handlers...');
+                
+                // Initialize state
+                jsPsych.data.addProperties({
+                    found_differences: [],
+                    start_time: Date.now()
+                });
+
+                // Add click handlers to hotspots
+                const hotspots = document.querySelectorAll('.hotspot');
+                console.log('Found', hotspots.length, 'hotspots to add click handlers to');
+                hotspots.forEach(hotspot => {
+                    hotspot.addEventListener('click', function() {
+                        const diffId = this.getAttribute('data-id');
+                        handleHotspotClick(diffId, this);
+                    });
+                });
+
+                // Start timer
+                startTimer();
+            },
+            on_finish: function() {
+                // Record final data
+                jsPsych.data.addProperties({
+                    end_time: Date.now(),
+                    total_found: jsPsych.data.get().values()[0].found_differences.length
+                });
+            }
+        };
+        timeline.push(spot_difference_task);
+
+        // Function to handle hotspot clicks
+        function handleHotspotClick(diffId, hotspotElement) {
+            const currentData = jsPsych.data.get().values()[0];
+            const foundDifferences = currentData.found_differences || [];
+            const diff = differences.find(d => d.id == diffId);
+            
+            if (!diff) return;
+            
+            const isFirstClick = !foundDifferences.includes(diffId);
+            
+            if (isFirstClick) {
+                // First time clicking this difference
+                foundDifferences.push(diffId);
+                diff.found = true;
+                hotspotElement.classList.add('found');
+                
+                // Play correct audio
+                const audio = new Audio('mp3/correct.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    found_differences: foundDifferences,
+                    last_clicked: diffId,
+                    click_time: Date.now(),
+                    was_first_click: true
+                });
+                
+                // Update found count display
+                document.getElementById('found-count').textContent = `Found: ${foundDifferences.length}/6`;
+                
+                console.log(`First click on difference ${diffId}. Total found: ${foundDifferences.length}`);
+            } else {
+                // Already clicked this difference
+                
+                // Play "got it already" audio
+                const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    last_clicked: diffId,
+                    click_time: Date.now(),
+                    was_first_click: false
+                });
+                
+                console.log(`Repeat click on difference ${diffId}. Total found: ${foundDifferences.length}`);
+            }
+            
+            // Check if all differences are found
+            if (foundDifferences.length === 6) {
+                console.log('All 6 differences found!');
+                // Could end trial early here if desired
+            }
+        }
+
+        // Timer function
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            const startTime = Date.now();
+            const duration = 60000; // 60 seconds
+
+            const timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+                
+                timerElement.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    jsPsych.finishTrial();
+                }
+            }, 1000);
+        }
+
+        // Function to display results
+        function displayResults() {
+            const data = jsPsych.data.get().values()[0];
+            const foundDifferences = data.found_differences || [];
+            
+            const resultsHtml = `
+                <div class="instructions">
+                    <h2>Task Complete!</h2>
+                    <p>You found ${foundDifferences.length} out of 6 differences.</p>
+                    <p>Differences found: ${foundDifferences.join(', ') || 'None'}</p>
+                    <p>Time taken: ${Math.round((data.end_time - data.start_time) / 1000)} seconds</p>
+                    <h3>All Data:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+            
+            document.getElementById('jspsych-target').innerHTML = resultsHtml;
+        }
+
+        // Run the experiment
+        console.log('Starting spot-the-difference experiment...');
+        jsPsych.run(timeline);
+    </script>
+</body>
+</html> 
