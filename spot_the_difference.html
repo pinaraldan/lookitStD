@@ -21,25 +21,65 @@
         .image-container {
             position: relative;
             text-align: center;
+            flex: 1;
+            max-width: 500px;
         }
         .comparison-image {
+            width: 100%;
             max-width: 500px;
             max-height: 400px;
+            height: auto;
             border: 2px solid #ccc;
+        }
+        
+        /* Responsive design for tablets and smaller screens */
+        @media (max-width: 768px) {
+            .image-comparison {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            .image-container {
+                max-width: 100%;
+            }
+            .comparison-image {
+                max-width: 100%;
+                max-height: 300px;
+            }
+            .hotspot {
+                width: 25px;
+                height: 25px;
+            }
+        }
+        
+        /* Responsive design for mobile phones */
+        @media (max-width: 480px) {
+            .image-comparison {
+                padding: 5px;
+            }
+            .comparison-image {
+                max-height: 250px;
+            }
+            .hotspot {
+                width: 20px;
+                height: 20px;
+            }
+            .timer {
+                font-size: 18px;
+            }
+            .found-count {
+                font-size: 14px;
+            }
         }
         .hotspot {
             position: absolute;
             width: 30px;
             height: 30px;
-            background: rgba(255, 255, 0, 0.3);
-            border: 2px solid yellow;
+            background: transparent;
+            border: 2px solid transparent;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-        }
-        .hotspot:hover {
-            background: rgba(255, 255, 0, 0.5);
-            transform: scale(1.1);
         }
         .hotspot.found {
             background: rgba(0, 255, 0, 0.5);
