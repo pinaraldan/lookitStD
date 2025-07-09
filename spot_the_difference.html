@@ -76,15 +76,17 @@
             width: 30px;
             height: 30px;
             background: transparent;
-            border: 2px solid transparent;
+            border: none;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
+            opacity: 0;
         }
         .hotspot.found {
             background: rgba(0, 255, 0, 0.5);
-            border-color: green;
+            border: 2px solid green;
             cursor: default;
+            opacity: 1;
         }
         .timer {
             position: fixed;
@@ -175,7 +177,7 @@
                 gotItAlreadyAudio.onerror = () => console.log('GotItAlready audio failed to load');
                 gotItAlreadyAudio.load();
                 
-                const noDiffAudio = new Audio('mp3/noDiff.mp3' + cacheBuster);
+                const noDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
                 noDiffAudio.oncanplay = () => console.log('NoDiff audio loaded');
                 noDiffAudio.onerror = () => console.log('NoDiff audio failed to load');
                 noDiffAudio.load();
@@ -258,7 +260,7 @@
                     }
                     
                     // Click was on non-hotspot area, play noDiff audio
-                    const audio = new Audio('mp3/noDiff.mp3' + cacheBuster);
+                    const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
                     audio.play().catch(e => console.log('Audio play error:', e));
                     
                     // Log the non-hotspot click
