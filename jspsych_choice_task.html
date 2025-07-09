@@ -88,16 +88,16 @@
             on_load: function() {
                 // Preload images
                 const images = [
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/left.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/1.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/2.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/3.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/4.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/5.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/6.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/7.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/8.png',
-                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/9.png'
+                    'img/left.png',
+                    'img/1.png',
+                    'img/2.png',
+                    'img/3.png',
+                    'img/4.png',
+                    'img/5.png',
+                    'img/6.png',
+                    'img/7.png',
+                    'img/8.png',
+                    'img/9.png'
                 ];
                 
                 images.forEach(src => {
@@ -106,13 +106,13 @@
                 });
 
                 // Preload audio
-                const correctAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/correct.mp3');
+                const correctAudio = new Audio('mp3/correct.mp3');
                 correctAudio.load();
                 
-                const gotItAlreadyAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/gotItAlready.mp3');
+                const gotItAlreadyAudio = new Audio('mp3/gotItAlready.mp3');
                 gotItAlreadyAudio.load();
                 
-                const notDiffAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/notDiff.mp3');
+                const notDiffAudio = new Audio('mp3/notDiff.mp3');
                 notDiffAudio.load();
             }
         };
@@ -140,34 +140,34 @@
             stimulus: function() {
                 return `
                     <div class="main-container">
-                        <img src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/left.png" class="left-image">
+                        <img src="img/left.png" class="left-image">
                         <div class="image-grid">
                             <div class="image-container">
-                                <img id="img-1" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/1.png" class="choice-image" data-id="1">
+                                <img id="img-1" src="img/1.png" class="choice-image" data-id="1">
                             </div>
                             <div class="image-container">
-                                <img id="img-2" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/2.png" class="choice-image" data-id="2">
+                                <img id="img-2" src="img/2.png" class="choice-image" data-id="2">
                             </div>
                             <div class="image-container">
-                                <img id="img-3" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/3.png" class="choice-image" data-id="3">
+                                <img id="img-3" src="img/3.png" class="choice-image" data-id="3">
                             </div>
                             <div class="image-container">
-                                <img id="img-4" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/4.png" class="choice-image" data-id="4">
+                                <img id="img-4" src="img/4.png" class="choice-image" data-id="4">
                             </div>
                             <div class="image-container">
-                                <img id="img-5" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/5.png" class="choice-image" data-id="5">
+                                <img id="img-5" src="img/5.png" class="choice-image" data-id="5">
                             </div>
                             <div class="image-container">
-                                <img id="img-6" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/6.png" class="choice-image" data-id="6">
+                                <img id="img-6" src="img/6.png" class="choice-image" data-id="6">
                             </div>
                             <div class="image-container">
-                                <img id="img-7" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/7.png" class="choice-image" data-id="7">
+                                <img id="img-7" src="img/7.png" class="choice-image" data-id="7">
                             </div>
                             <div class="image-container">
-                                <img id="img-8" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/8.png" class="choice-image" data-id="8">
+                                <img id="img-8" src="img/8.png" class="choice-image" data-id="8">
                             </div>
                             <div class="image-container">
-                                <img id="img-9" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/9.png" class="choice-image" data-id="9">
+                                <img id="img-9" src="img/9.png" class="choice-image" data-id="9">
                             </div>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                     foundImages.push(imageId);
                     
                     // Play correct audio
-                    const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/correct.mp3');
+                    const audio = new Audio('mp3/correct.mp3');
                     audio.play();
                     
                     // Update data
@@ -239,7 +239,7 @@
                     // Already clicked this image before
                     
                     // Play "got it already" audio
-                    const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/gotItAlready.mp3');
+                    const audio = new Audio('mp3/gotItAlready.mp3');
                     audio.play();
                     
                     // Update data
@@ -262,7 +262,7 @@
                 console.log('Wrong image clicked:', imageId);
                 
                 // Play notDiff audio
-                const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/notDiff.mp3');
+                const audio = new Audio('mp3/notDiff.mp3');
                 audio.play();
                 
                 // Update data
