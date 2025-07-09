@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Choice Task</title>
+    <script src="https://unpkg.com/jspsych@8.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@2.0.0"></script>
+    <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .image-container {
+            text-align: center;
+            padding: 10px;
+        }
+        .choice-image {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .choice-image:hover {
+            border-color: #007bff;
+        }
+        .left-image {
+            width: 200px;
+            height: 200px;
+            margin-right: 20px;
+        }
+        .main-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .found-count {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+        .instructions {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="jspsych-target"></div>
+
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                // Display results
+                displayResults();
+            }
+        });
+
+        // Timeline
+        const timeline = [];
+
+        // Preload images and audio
+        const preload = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: 'Loading...',
+            choices: [],
+            trial_duration: 1000,
+            on_load: function() {
+                // Preload images
+                const images = [
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/left.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/1.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/2.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/3.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/4.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/5.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/6.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/7.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/8.png',
+                    'https://raw.githubusercontent.com/pinaraldan/lookitStD/master/9.png'
+                ];
+                
+                images.forEach(src => {
+                    const img = new Image();
+                    img.src = src;
+                });
+
+                // Preload audio
+                const correctAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/correct.mp3');
+                correctAudio.load();
+                
+                const gotItAlreadyAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/gotItAlready.mp3');
+                gotItAlreadyAudio.load();
+                
+                const notDiffAudio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/notDiff.mp3');
+                notDiffAudio.load();
+            }
+        };
+        timeline.push(preload);
+
+        // Instructions
+        const instructions = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Find the Special Images</h2>
+                    <p>Click on images 1, 2, 3, 4, 5, and 6 to find them!</p>
+                    <p>You have 60 seconds to find all the special images.</p>
+                    <p>If you click the same image twice, you'll hear a different sound.</p>
+                    <p>Click "Start" to begin.</p>
+                </div>
+            `,
+            choices: ['Start']
+        };
+        timeline.push(instructions);
+
+        // Main choice task
+        const choice_task = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function() {
+                return `
+                    <div class="main-container">
+                        <img src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/left.png" class="left-image">
+                        <div class="image-grid">
+                            <div class="image-container">
+                                <img id="img-1" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/1.png" class="choice-image" data-id="1">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-2" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/2.png" class="choice-image" data-id="2">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-3" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/3.png" class="choice-image" data-id="3">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-4" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/4.png" class="choice-image" data-id="4">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-5" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/5.png" class="choice-image" data-id="5">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-6" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/6.png" class="choice-image" data-id="6">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-7" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/7.png" class="choice-image" data-id="7">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-8" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/8.png" class="choice-image" data-id="8">
+                            </div>
+                            <div class="image-container">
+                                <img id="img-9" src="https://raw.githubusercontent.com/pinaraldan/lookitStD/master/9.png" class="choice-image" data-id="9">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer" id="timer">60</div>
+                    <div class="found-count" id="found-count">Found: 0/6</div>
+                `;
+            },
+            choices: [], // No buttons, we'll handle clicks manually
+            trial_duration: 60000, // 60 seconds
+            on_load: function() {
+                // Initialize state
+                jsPsych.data.addProperties({
+                    found_images: [],
+                    start_time: Date.now()
+                });
+
+                // Add click handlers
+                const images = document.querySelectorAll('.choice-image');
+                images.forEach(img => {
+                    img.addEventListener('click', function() {
+                        const imageId = this.getAttribute('data-id');
+                        handleImageClick(imageId, this);
+                    });
+                });
+
+                // Start timer
+                startTimer();
+            },
+            on_finish: function() {
+                // Record final data
+                jsPsych.data.addProperties({
+                    end_time: Date.now(),
+                    total_found: jsPsych.data.get().values()[0].found_images.length
+                });
+            }
+        };
+        timeline.push(choice_task);
+
+        // Function to handle image clicks
+        function handleImageClick(imageId, imgElement) {
+            const currentData = jsPsych.data.get().values()[0];
+            const foundImages = currentData.found_images || [];
+
+            // Only process clicks on images 1-6 (correct options)
+            if (imageId >= '1' && imageId <= '6') {
+                const isFirstClick = !foundImages.includes(imageId);
+                
+                if (isFirstClick) {
+                    // First time clicking this image
+                    foundImages.push(imageId);
+                    
+                    // Play correct audio
+                    const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/correct.mp3');
+                    audio.play();
+                    
+                    // Update data
+                    jsPsych.data.addProperties({
+                        found_images: foundImages,
+                        last_clicked: imageId,
+                        click_time: Date.now(),
+                        was_first_click: true
+                    });
+                    
+                    // Update found count display
+                    document.getElementById('found-count').textContent = `Found: ${foundImages.length}/6`;
+                    
+                    console.log(`First click on image ${imageId}. Total found: ${foundImages.length}`);
+                } else {
+                    // Already clicked this image before
+                    
+                    // Play "got it already" audio
+                    const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/gotItAlready.mp3');
+                    audio.play();
+                    
+                    // Update data
+                    jsPsych.data.addProperties({
+                        last_clicked: imageId,
+                        click_time: Date.now(),
+                        was_first_click: false
+                    });
+                    
+                    console.log(`Repeat click on image ${imageId}. Total found: ${foundImages.length}`);
+                }
+                
+                // Check if all images are found
+                if (foundImages.length === 6) {
+                    console.log('All 6 images found!');
+                    // Could end trial early here if desired
+                }
+            } else {
+                // Wrong image clicked (7, 8, 9)
+                console.log('Wrong image clicked:', imageId);
+                
+                // Play notDiff audio
+                const audio = new Audio('https://raw.githubusercontent.com/pinaraldan/lookitStD/master/notDiff.mp3');
+                audio.play();
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    last_clicked: imageId,
+                    click_time: Date.now(),
+                    was_first_click: false
+                });
+            }
+        }
+
+        // Timer function
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            const startTime = Date.now();
+            const duration = 60000; // 60 seconds
+
+            const timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+                
+                timerElement.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    jsPsych.finishTrial();
+                }
+            }, 1000);
+        }
+
+        // Function to display results
+        function displayResults() {
+            const data = jsPsych.data.get().values()[0];
+            const foundImages = data.found_images || [];
+            
+            const resultsHtml = `
+                <div class="instructions">
+                    <h2>Task Complete!</h2>
+                    <p>You found ${foundImages.length} out of 6 special images.</p>
+                    <p>Images found: ${foundImages.join(', ') || 'None'}</p>
+                    <p>Time taken: ${Math.round((data.end_time - data.start_time) / 1000)} seconds</p>
+                    <h3>All Data:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+            
+            document.getElementById('jspsych-target').innerHTML = resultsHtml;
+        }
+
+        // Run the experiment
+        jsPsych.run(timeline);
+    </script>
+</body>
+</html> 
