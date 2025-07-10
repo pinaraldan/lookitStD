@@ -131,6 +131,16 @@
             { id: 5, x: 88.1, y: 41.9, size: 40, found: false },
             { id: 6, x: 97.3, y: 14.2, size: 40, found: false }
         ];
+
+        // Define the differences for the second task (hotspots) - you can adjust these coordinates
+        const differences2 = [
+            { id: 1, x: 10.0, y: 15.0, size: 40, found: false },
+            { id: 2, x: 8.0, y: 45.0, size: 40, found: false },
+            { id: 3, x: 30.0, y: 35.0, size: 40, found: false },
+            { id: 4, x: 75.0, y: 45.0, size: 40, found: false },
+            { id: 5, x: 90.0, y: 45.0, size: 40, found: false },
+            { id: 6, x: 95.0, y: 20.0, size: 40, found: false }
+        ];
         
         // Initialize jsPsych
         const jsPsych = initJsPsych();
@@ -150,7 +160,9 @@
                 // Preload images
                 const images = [
                     'img/left.png' + cacheBuster,
-                    'img/1.png' + cacheBuster
+                    'img/right.png' + cacheBuster,
+                    'img/left2.png' + cacheBuster,
+                    'img/right2.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
@@ -300,6 +312,109 @@
         };
         timeline.push(spot_difference_task);
 
+        // Second spot-the-difference task
+        const spot_difference_task_2 = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function() {
+                console.log('Rendering second spot-the-difference task...');
+                const imageWidth = 1742;
+                const imageHeight = 1388;
+                return `
+                    <div class="image-comparison">
+                        <div class="image-container">
+                            <img src="img/left2.png${cacheBuster}" class="comparison-image" alt="Original">
+                        </div>
+                        <div class="image-container">
+                            <div style="position: relative; display: inline-block;">
+                                <img src="img/right2.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 24px; color: #333; font-weight: 900; text-shadow: 0 0 2px #333;">⬇</div>
+                                ${differences2.map(diff => {
+                                    const xOffset = (diff.size / 2) / imageWidth * 100;
+                                    const yOffset = (diff.size / 2) / imageHeight * 100;
+                                    return `
+                                        <div class="hotspot ${diff.found ? 'found' : ''}" 
+                                             id="hotspot2-${diff.id}"
+                                             style="left: calc(${diff.x}% - ${xOffset}%); top: calc(${diff.y}% - ${yOffset}%); width: ${diff.size}px; height: ${diff.size}px;"
+                                             data-id="${diff.id}">
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer" id="timer2">60</div>
+                `;
+            },
+            choices: [], // No buttons, we'll handle clicks manually
+            trial_duration: 60000, // 60 seconds
+            on_load: function() {
+                console.log('Second spot-the-difference task loaded, setting up click handlers...');
+                
+                // Initialize state for second task
+                jsPsych.data.addProperties({
+                    found_differences_2: [],
+                    start_time_2: Date.now()
+                });
+
+                // Add click handlers to hotspots
+                const hotspots = document.querySelectorAll('.hotspot');
+                console.log('Found', hotspots.length, 'hotspots to add click handlers to in task 2');
+                
+                if (hotspots.length === 0) {
+                    console.error('No hotspots found in task 2! Check if the HTML is rendered correctly.');
+                }
+                
+                hotspots.forEach((hotspot, index) => {
+                    console.log(`Adding click handler to hotspot ${index} in task 2:`, hotspot);
+                    hotspot.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        console.log('Hotspot clicked in task 2!', this);
+                        const diffId = this.getAttribute('data-id');
+                        handleHotspotClick2(diffId, this);
+                    });
+                });
+                
+                // Add click handler to the div containing the right image and hotspots
+                const rightImageContainer = document.querySelector('.image-container:last-child div');
+                console.log('Adding click handler to right image container in task 2:', rightImageContainer);
+                
+                if (!rightImageContainer) {
+                    console.error('Right image container not found in task 2!');
+                } else {
+                    rightImageContainer.addEventListener('click', function(e) {
+                        console.log('Image container clicked in task 2, target:', e.target);
+                        
+                        // Check if the click was on a hotspot or any of its children
+                        let target = e.target;
+                        while (target && target !== this) {
+                            if (target.classList && target.classList.contains('hotspot')) {
+                                console.log('Click was on hotspot in task 2, ignoring image container handler');
+                                return; // Let the hotspot handler deal with it
+                            }
+                            target = target.parentElement;
+                        }
+                        
+                        // Click was on non-hotspot area, play notDiff audio
+                        console.log('Clicked on non-hotspot area in task 2');
+                        const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                        notDiffAudio.play().catch(e => console.log('Audio play error:', e));
+                    });
+                }
+
+                // Start timer for second task
+                startTimer2();
+            },
+            on_finish: function() {
+                // Record final data for second task
+                jsPsych.data.addProperties({
+                    end_time_2: Date.now(),
+                    total_found_2: jsPsych.data.get().values()[0].found_differences_2.length
+                });
+            }
+        };
+        timeline.push(spot_difference_task_2);
+
         // Completion message
         const completion = {
             type: jsPsychHtmlButtonResponse,
@@ -375,6 +490,83 @@
         // Timer function
         function startTimer() {
             const timerElement = document.getElementById('timer');
+            const startTime = Date.now();
+            const duration = 60000; // 60 seconds
+
+            const timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+                
+                timerElement.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    jsPsych.finishTrial();
+                }
+            }, 1000);
+        }
+
+        // Function to handle hotspot clicks for second task
+        function handleHotspotClick2(diffId, hotspotElement) {
+            const currentData = jsPsych.data.get().values()[0];
+            const foundDifferences = currentData.found_differences_2 || [];
+            const diff = differences2.find(d => d.id == diffId);
+            
+            if (!diff) {
+                return;
+            }
+            
+            const isFirstClick = !foundDifferences.includes(diffId);
+            
+            if (isFirstClick) {
+                // First time clicking this difference
+                foundDifferences.push(diffId);
+                diff.found = true;
+                hotspotElement.classList.add('found');
+                
+                // Play correct audio
+                const audio = new Audio('mp3/correct.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    found_differences_2: foundDifferences,
+                    last_clicked_2: diffId,
+                    click_time_2: Date.now(),
+                    was_first_click_2: true
+                });
+                
+                console.log(`First click on difference ${diffId} in task 2. Total found: ${foundDifferences.length}`);
+            } else {
+                // Already clicked this difference
+                
+                // Play "got it already" audio
+                const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    last_clicked_2: diffId,
+                    click_time_2: Date.now(),
+                    was_first_click_2: false
+                });
+                
+                console.log(`Repeat click on difference ${diffId} in task 2. Total found: ${foundDifferences.length}`);
+            }
+            
+            // Check if all differences are found
+            if (foundDifferences.length === 6) {
+                console.log('All 6 differences found in task 2! Ending trial early.');
+                // End the trial early when all differences are found
+                setTimeout(() => {
+                    jsPsych.finishTrial();
+                }, 1000); // Wait 1 second to let the audio play
+            }
+        }
+
+        // Timer function for second task
+        function startTimer2() {
+            const timerElement = document.getElementById('timer2');
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
 
