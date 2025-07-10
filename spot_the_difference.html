@@ -161,8 +161,8 @@
                 const images = [
                     'img/left.png' + cacheBuster,
                     'img/right.png' + cacheBuster,
-                    'img/left2.png' + cacheBuster,
-                    'img/right2.png' + cacheBuster
+                    'img/bothCounterLeft.png' + cacheBuster,
+                    'img/bothCounterRight.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
@@ -322,11 +322,11 @@
                 return `
                     <div class="image-comparison">
                         <div class="image-container">
-                            <img src="img/left2.png${cacheBuster}" class="comparison-image" alt="Original">
+                            <img src="img/bothCounterLeft.png${cacheBuster}" class="comparison-image" alt="Original">
                         </div>
                         <div class="image-container">
                             <div style="position: relative; display: inline-block;">
-                                <img src="img/right2.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <img src="img/bothCounterRight.png${cacheBuster}" class="comparison-image" alt="Modified">
                                 <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 24px; color: #333; font-weight: 900; text-shadow: 0 0 2px #333;">⬇</div>
                                 ${differences2.map(diff => {
                                     const xOffset = (diff.size / 2) / imageWidth * 100;
