@@ -300,6 +300,20 @@
         };
         timeline.push(spot_difference_task);
 
+        // Completion message
+        const completion = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Great job!</h2>
+                    <p>You've completed the spot-the-difference task.</p>
+                    <p>Click "Finish" to complete the experiment.</p>
+                </div>
+            `,
+            choices: ['Finish']
+        };
+        timeline.push(completion);
+
         // Function to handle hotspot clicks
         function handleHotspotClick(diffId, hotspotElement) {
             const currentData = jsPsych.data.get().values()[0];
