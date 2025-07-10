@@ -9,6 +9,12 @@
     <script src="https://unpkg.com/@jspsych/plugin-preload@2.0.0"></script>
     <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
     <style>
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
         .image-comparison {
             display: flex;
             justify-content: center;
@@ -71,18 +77,20 @@
         }
         .hotspot {
             position: absolute;
-            background: rgba(255, 0, 0, 0.3);
-            border: 2px solid red;
+            background: transparent !important;
+            border: none !important;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            opacity: 1;
+            opacity: 0 !important;
+            visibility: hidden !important;
         }
         .hotspot.found {
-            background: rgba(0, 255, 0, 0.5);
-            border: 2px solid green;
+            background: rgba(0, 255, 0, 0.5) !important;
+            border: 2px solid green !important;
             cursor: default;
-            opacity: 1;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         .timer {
             position: fixed;
@@ -116,12 +124,12 @@
         
         // Define the differences (hotspots) - you can adjust these coordinates
         const differences = [
-            { id: 1, x: 7.4, y: 14.9, size: 35, found: false },
-            { id: 3, x: 28.4, y: 30.2, size: 30, found: false },
-            { id: 2, x: 5.9, y: 42.3, size: 40, found: false },
-            { id: 4, x: 97.1, y: 14.9, size: 35, found: false },
-            { id: 5, x: 88.1, y: 41.8, size: 35, found: false },
-            { id: 6, x: 73.0, y: 40.9, size: 30, found: false }
+            { id: 1, x: 7.3, y: 7.9, size: 35, found: false },
+            { id: 2, x: 2.0, y: 4.0, size: 40, found: false },
+            { id: 3, x: 1.7, y: 11.1, size: 30, found: false },
+            { id: 4, x: 18.9, y: 10.7, size: 35, found: false },
+            { id: 5, x: 23.2, y: 11.3, size: 35, found: false },
+            { id: 6, x: 25.3, y: 3.8, size: 30, found: false }
         ];
         
         // Initialize jsPsych
@@ -142,7 +150,7 @@
                 // Preload images
                 const images = [
                     'img/left.png' + cacheBuster,
-                    'img/right.png' + cacheBuster
+                    'img/1.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
@@ -162,6 +170,11 @@
                 gotItAlreadyAudio.oncanplay = () => console.log('GotItAlready audio loaded');
                 gotItAlreadyAudio.onerror = () => console.log('GotItAlready audio failed to load');
                 gotItAlreadyAudio.load();
+                
+                const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                notDiffAudio.oncanplay = () => console.log('NotDiff audio loaded');
+                notDiffAudio.onerror = () => console.log('NotDiff audio failed to load');
+                notDiffAudio.load();
                 
 
             }
@@ -189,6 +202,8 @@
             type: jsPsychHtmlButtonResponse,
             stimulus: function() {
                 console.log('Rendering spot-the-difference task...');
+                const imageWidth = 1742;
+                const imageHeight = 1388;
                 return `
                     <div class="image-comparison">
                         <div class="image-container">
@@ -199,13 +214,17 @@
                             <div class="image-label">Find the Differences</div>
                             <div style="position: relative; display: inline-block;">
                                 <img src="img/right.png${cacheBuster}" class="comparison-image" alt="Modified">
-                                ${differences.map(diff => `
-                                    <div class="hotspot ${diff.found ? 'found' : ''}" 
-                                         id="hotspot-${diff.id}"
-                                         style="left: ${diff.x}%; top: ${diff.y}%; width: ${diff.size}px; height: ${diff.size}px;"
-                                         data-id="${diff.id}">
-                                    </div>
-                                `).join('')}
+                                ${differences.map(diff => {
+                                    const xOffset = (diff.size / 2) / imageWidth * 100;
+                                    const yOffset = (diff.size / 2) / imageHeight * 100;
+                                    return `
+                                        <div class="hotspot ${diff.found ? 'found' : ''}" 
+                                             id="hotspot-${diff.id}"
+                                             style="left: calc(${diff.x}% - ${xOffset}%); top: calc(${diff.y}% - ${yOffset}%); width: ${diff.size}px; height: ${diff.size}px;"
+                                             data-id="${diff.id}">
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     </div>
@@ -226,13 +245,63 @@
                 // Add click handlers to hotspots
                 const hotspots = document.querySelectorAll('.hotspot');
                 console.log('Found', hotspots.length, 'hotspots to add click handlers to');
-                hotspots.forEach(hotspot => {
-                    hotspot.addEventListener('click', function() {
-                        const diffId = this.getAttribute('data-id');
-                        handleHotspotClick(diffId, this);
+                
+                try {
+                    console.log('About to make hotspots visible...');
+                    // TEMPORARY: Make hotspots visible for testing
+                    hotspots.forEach((hotspot, index) => {
+                        console.log(`Making hotspot ${index + 1} visible:`, hotspot);
+                        hotspot.style.background = 'red';
+                        hotspot.style.opacity = '0.3';
+                        hotspot.style.visibility = 'visible';
+                        hotspot.style.pointerEvents = 'auto';
+                        console.log(`Hotspot ${index + 1} styles applied`);
                     });
-                });
-
+                    
+                    console.log('About to log hotspots HTML...');
+                    console.log('Hotspots HTML:', document.querySelector('.image-container:last-child').innerHTML);
+                    
+                    console.log('About to add click handlers...');
+                    hotspots.forEach((hotspot, index) => {
+                        console.log(`Adding click handler to hotspot ${index + 1}:`, hotspot);
+                        console.log(`Hotspot ${index + 1} HTML:`, hotspot.outerHTML);
+                        hotspot.addEventListener('click', function() {
+                            console.log('Hotspot clicked!', this);
+                            const diffId = this.getAttribute('data-id');
+                            handleHotspotClick(diffId, this);
+                        });
+                        console.log(`Click handler added to hotspot ${index + 1}`);
+                    });
+                    console.log('All click handlers added successfully');
+                } catch (error) {
+                    console.error('Error in hotspot setup:', error);
+                }
+                
+                // Add click handler to image container for non-hotspot clicks
+                try {
+                    console.log('About to set up image container click handler...');
+                    const imageContainer = document.querySelector('.image-container:last-child');
+                    console.log('Adding click handler to image container:', imageContainer);
+                    imageContainer.addEventListener('click', function(e) {
+                        console.log('Image container clicked!', e.target);
+                        // Check if the click was on a hotspot
+                        if (e.target.classList.contains('hotspot')) {
+                            console.log('Click was on hotspot, letting hotspot handler deal with it');
+                            return; // Let the hotspot handler deal with it
+                        }
+                        
+                        // Click was on non-hotspot area, play notDiff audio
+                        console.log('Click was on non-hotspot area, playing notDiff audio');
+                        const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                        audio.play().catch(e => console.log('Audio play error:', e));
+                        
+                        // Log the non-hotspot click
+                        console.log('Clicked on non-hotspot area');
+                    });
+                    console.log('Image container click handler added successfully');
+                } catch (error) {
+                    console.error('Error in image container setup:', error);
+                }
 
 
                 // Start timer
@@ -250,24 +319,32 @@
 
         // Function to handle hotspot clicks
         function handleHotspotClick(diffId, hotspotElement) {
+            console.log('handleHotspotClick called for diffId:', diffId, 'hotspotElement:', hotspotElement);
+            
             const currentData = jsPsych.data.get().values()[0];
             const foundDifferences = currentData.found_differences || [];
             const diff = differences.find(d => d.id == diffId);
             
-            if (!diff) return;
+            console.log('foundDifferences:', foundDifferences, 'diff:', diff);
+            
+            if (!diff) {
+                console.log('No diff found for id:', diffId);
+                return;
+            }
             
             const isFirstClick = !foundDifferences.includes(diffId);
+            console.log('isFirstClick:', isFirstClick);
             
             if (isFirstClick) {
+                console.log('Adding found class to hotspot element');
                 // First time clicking this difference
                 foundDifferences.push(diffId);
                 diff.found = true;
                 hotspotElement.classList.add('found');
-                
+                console.log('Found class added. Current classes:', hotspotElement.className);
                 // Play correct audio
                 const audio = new Audio('mp3/correct.mp3' + cacheBuster);
                 audio.play().catch(e => console.log('Audio play error:', e));
-                
                 // Update data
                 jsPsych.data.addProperties({
                     found_differences: foundDifferences,
@@ -275,28 +352,22 @@
                     click_time: Date.now(),
                     was_first_click: true
                 });
-                
-
-                
                 console.log(`First click on difference ${diffId}. Total found: ${foundDifferences.length}`);
             } else {
+                console.log('Repeat click - not adding found class');
                 // Already clicked this difference
-                
                 // Play "got it already" audio
                 const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
                 audio.play().catch(e => console.log('Audio play error:', e));
-                
                 // Update data
                 jsPsych.data.addProperties({
                     last_clicked: diffId,
                     click_time: Date.now(),
                     was_first_click: false
                 });
-                
                 console.log(`Repeat click on difference ${diffId}. Total found: ${foundDifferences.length}`);
             }
             
-            // Check if all differences are found
             if (foundDifferences.length === 6) {
                 console.log('All 6 differences found!');
                 // Could end trial early here if desired
