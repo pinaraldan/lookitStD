@@ -71,8 +71,6 @@
         }
         .hotspot {
             position: absolute;
-            width: 30px;
-            height: 30px;
             background: transparent;
             border: none;
             border-radius: 50%;
@@ -118,12 +116,12 @@
         
         // Define the differences (hotspots) - you can adjust these coordinates
         const differences = [
-            { id: 1, x: 100, y: 150, found: false },
-            { id: 2, x: 250, y: 200, found: false },
-            { id: 3, x: 400, y: 100, found: false },
-            { id: 4, x: 150, y: 300, found: false },
-            { id: 5, x: 350, y: 250, found: false },
-            { id: 6, x: 200, y: 350, found: false }
+            { id: 1, x: 100, y: 150, size: 30, found: false },
+            { id: 2, x: 250, y: 200, size: 30, found: false },
+            { id: 3, x: 400, y: 100, size: 30, found: false },
+            { id: 4, x: 150, y: 300, size: 30, found: false },
+            { id: 5, x: 350, y: 250, size: 30, found: false },
+            { id: 6, x: 200, y: 350, size: 30, found: false }
         ];
         
         // Initialize jsPsych
@@ -204,7 +202,7 @@
                                 ${differences.map(diff => `
                                     <div class="hotspot ${diff.found ? 'found' : ''}" 
                                          id="hotspot-${diff.id}"
-                                         style="left: ${diff.x}px; top: ${diff.y}px;"
+                                         style="left: ${diff.x}px; top: ${diff.y}px; width: ${diff.size}px; height: ${diff.size}px;"
                                          data-id="${diff.id}">
                                     </div>
                                 `).join('')}
