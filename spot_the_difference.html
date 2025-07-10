@@ -211,7 +211,7 @@
                                 ${differences.map(diff => `
                                     <div class="hotspot ${diff.found ? 'found' : ''}" 
                                          id="hotspot-${diff.id}"
-                                         style="left: ${diff.x}px; top: ${diff.y}px; width: ${diff.size}px; height: ${diff.size}px;"
+                                         style="left: ${diff.x}%; top: ${diff.y}%; width: ${diff.size}px; height: ${diff.size}px;"
                                          data-id="${diff.id}">
                                     </div>
                                 `).join('')}
