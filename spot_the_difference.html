@@ -207,13 +207,12 @@
                 return `
                     <div class="image-comparison">
                         <div class="image-container">
-                            <div class="image-label">Original Image</div>
                             <img src="img/left.png${cacheBuster}" class="comparison-image" alt="Original">
                         </div>
                         <div class="image-container">
-                            <div class="image-label">Find the Differences</div>
                             <div style="position: relative; display: inline-block;">
                                 <img src="img/right.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 24px; color: #333; font-weight: bold;">↓</div>
                                 ${differences.map(diff => {
                                     const xOffset = (diff.size / 2) / imageWidth * 100;
                                     const yOffset = (diff.size / 2) / imageHeight * 100;
@@ -283,8 +282,8 @@
                         
                         // Click was on non-hotspot area, play notDiff audio
                         console.log('Clicked on non-hotspot area');
-                        const audio = new Audio('mp3/notDiff.mp3' + cacheBuster);
-                        audio.play().catch(e => console.log('Audio play error:', e));
+                        const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                        notDiffAudio.play().catch(e => console.log('Audio play error:', e));
                     });
                 }
 
@@ -351,8 +350,11 @@
             
             // Check if all differences are found
             if (foundDifferences.length === 6) {
-                console.log('All 6 differences found!');
-                // Could end trial early here if desired
+                console.log('All 6 differences found! Ending trial early.');
+                // End the trial early when all differences are found
+                setTimeout(() => {
+                    jsPsych.finishTrial();
+                }, 1000); // Wait 1 second to let the audio play
             }
         }
 
