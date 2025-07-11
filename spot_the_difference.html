@@ -656,6 +656,26 @@
         };
         timeline.push(final_completion);
 
+        // Data download screen
+        const data_download = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Data Download</h2>
+                    <p>Your experiment data will be downloaded automatically as a CSV file.</p>
+                    <p>Please save this file and send it to the researcher.</p>
+                    <p>Thank you for participating!</p>
+                </div>
+            `,
+            choices: [],
+            trial_duration: 3000, // 3 seconds to show the message
+            on_load: function() {
+                // Download the data as CSV
+                jsPsych.data.displayData('csv');
+            }
+        };
+        timeline.push(data_download);
+
         // Completion message
         const completion = {
             type: jsPsychHtmlButtonResponse,
