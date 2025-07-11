@@ -122,6 +122,9 @@
         // Add cache-busting parameter
         const cacheBuster = '?v=' + Date.now();
         
+        // Generate random participant ID (6-digit number)
+        const participantID = Math.floor(100000 + Math.random() * 900000);
+        
         // Define the differences (hotspots) - you can adjust these coordinates
         const differences = [
             { id: 1, x: 7.3, y: 14.7, size: 40, found: false },
@@ -194,6 +197,11 @@
             trial_duration: 1000,
             on_load: function() {
                 console.log('Preloading files...');
+                
+                // Add participant ID to data
+                jsPsych.data.addProperties({
+                    participant_id: participantID
+                });
                 
                 // Preload images
                 const images = [
