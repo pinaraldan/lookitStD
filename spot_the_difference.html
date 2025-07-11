@@ -334,6 +334,20 @@
         };
         timeline.push(spot_difference_task);
 
+        // Trial 1 completion screen
+        const trial1_completion = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Great job!</h2>
+                    <p>You are done with the first pictures!</p>
+                    <p>Click "Next" when you are ready to see the next pictures!</p>
+                </div>
+            `,
+            choices: ['Next']
+        };
+        timeline.push(trial1_completion);
+
         // Second spot-the-difference task
         const spot_difference_task_2 = {
             type: jsPsychHtmlButtonResponse,
@@ -436,6 +450,20 @@
             }
         };
         timeline.push(spot_difference_task_2);
+
+        // Trial 2 completion screen
+        const trial2_completion = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Great job!</h2>
+                    <p>You are done with the second pictures!</p>
+                    <p>Click "Next" when you are ready to see the next pictures!</p>
+                </div>
+            `,
+            choices: ['Next']
+        };
+        timeline.push(trial2_completion);
 
         // Third spot-the-difference task (oneCounterLeftB/oneCounterRightB)
         const spot_difference_task_3 = {
@@ -540,6 +568,20 @@
         };
         timeline.push(spot_difference_task_3);
 
+        // Trial 3 completion screen
+        const trial3_completion = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Great job!</h2>
+                    <p>You are done with the third pictures!</p>
+                    <p>Click "Next" when you are ready to see the next pictures!</p>
+                </div>
+            `,
+            choices: ['Next']
+        };
+        timeline.push(trial3_completion);
+
         // Fourth spot-the-difference task (bothCounterLeft/bothCounterRight)
         const spot_difference_task_4 = {
             type: jsPsychHtmlButtonResponse,
@@ -642,6 +684,20 @@
             }
         };
         timeline.push(spot_difference_task_4);
+
+        // Final completion screen
+        const final_completion = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Congratulations!</h2>
+                    <p>You are all done with the attention tasks!</p>
+                    <p>Thank you for participating!</p>
+                </div>
+            `,
+            choices: ['Finish']
+        };
+        timeline.push(final_completion);
 
         // Completion message
         const completion = {
