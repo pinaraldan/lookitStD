@@ -141,6 +141,26 @@
             { id: 5, x: 90.0, y: 45.0, size: 40, found: false },
             { id: 6, x: 95.0, y: 20.0, size: 40, found: false }
         ];
+
+        // Define the differences for the third task (hotspots) - you can adjust these coordinates
+        const differences3 = [
+            { id: 1, x: 12.0, y: 18.0, size: 40, found: false },
+            { id: 2, x: 9.0, y: 48.0, size: 40, found: false },
+            { id: 3, x: 32.0, y: 38.0, size: 40, found: false },
+            { id: 4, x: 77.0, y: 48.0, size: 40, found: false },
+            { id: 5, x: 92.0, y: 48.0, size: 40, found: false },
+            { id: 6, x: 97.0, y: 23.0, size: 40, found: false }
+        ];
+
+        // Define the differences for the fourth task (hotspots) - you can adjust these coordinates
+        const differences4 = [
+            { id: 1, x: 14.0, y: 20.0, size: 40, found: false },
+            { id: 2, x: 11.0, y: 50.0, size: 40, found: false },
+            { id: 3, x: 34.0, y: 40.0, size: 40, found: false },
+            { id: 4, x: 79.0, y: 50.0, size: 40, found: false },
+            { id: 5, x: 94.0, y: 50.0, size: 40, found: false },
+            { id: 6, x: 99.0, y: 25.0, size: 40, found: false }
+        ];
         
         // Initialize jsPsych
         const jsPsych = initJsPsych();
@@ -162,7 +182,9 @@
                     'img/left.png' + cacheBuster,
                     'img/right.png' + cacheBuster,
                     'img/bothCounterLeft.png' + cacheBuster,
-                    'img/bothCounterRight.png' + cacheBuster
+                    'img/bothCounterRight.png' + cacheBuster,
+                    'img/oneCounterLeftB.png' + cacheBuster,
+                    'img/oneCounterRightB.png' + cacheBuster
                 ];
                 
                 images.forEach(src => {
@@ -415,6 +437,212 @@
         };
         timeline.push(spot_difference_task_2);
 
+        // Third spot-the-difference task (oneCounterLeftB/oneCounterRightB)
+        const spot_difference_task_3 = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function() {
+                console.log('Rendering third spot-the-difference task...');
+                const imageWidth = 1742;
+                const imageHeight = 1388;
+                return `
+                    <div class="image-comparison">
+                        <div class="image-container">
+                            <img src="img/oneCounterLeftB.png${cacheBuster}" class="comparison-image" alt="Original">
+                        </div>
+                        <div class="image-container">
+                            <div style="position: relative; display: inline-block;">
+                                <img src="img/oneCounterRightB.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 24px; color: #333; font-weight: 900; text-shadow: 0 0 2px #333;">⬇</div>
+                                ${differences3.map(diff => {
+                                    const xOffset = (diff.size / 2) / imageWidth * 100;
+                                    const yOffset = (diff.size / 2) / imageHeight * 100;
+                                    return `
+                                        <div class="hotspot ${diff.found ? 'found' : ''}" 
+                                             id="hotspot3-${diff.id}"
+                                             style="left: calc(${diff.x}% - ${xOffset}%); top: calc(${diff.y}% - ${yOffset}%); width: ${diff.size}px; height: ${diff.size}px;"
+                                             data-id="${diff.id}">
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer" id="timer3">60</div>
+                `;
+            },
+            choices: [], // No buttons, we'll handle clicks manually
+            trial_duration: 60000, // 60 seconds
+            on_load: function() {
+                console.log('Third spot-the-difference task loaded, setting up click handlers...');
+                
+                // Initialize state for third task
+                jsPsych.data.addProperties({
+                    found_differences_3: [],
+                    start_time_3: Date.now()
+                });
+
+                // Add click handlers to hotspots
+                const hotspots = document.querySelectorAll('.hotspot');
+                console.log('Found', hotspots.length, 'hotspots to add click handlers to in task 3');
+                
+                if (hotspots.length === 0) {
+                    console.error('No hotspots found in task 3! Check if the HTML is rendered correctly.');
+                }
+                
+                hotspots.forEach((hotspot, index) => {
+                    console.log(`Adding click handler to hotspot ${index} in task 3:`, hotspot);
+                    hotspot.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        console.log('Hotspot clicked in task 3!', this);
+                        const diffId = this.getAttribute('data-id');
+                        handleHotspotClick3(diffId, this);
+                    });
+                });
+                
+                // Add click handler to the div containing the right image and hotspots
+                const rightImageContainer = document.querySelector('.image-container:last-child div');
+                console.log('Adding click handler to right image container in task 3:', rightImageContainer);
+                
+                if (!rightImageContainer) {
+                    console.error('Right image container not found in task 3!');
+                } else {
+                    rightImageContainer.addEventListener('click', function(e) {
+                        console.log('Image container clicked in task 3, target:', e.target);
+                        
+                        // Check if the click was on a hotspot or any of its children
+                        let target = e.target;
+                        while (target && target !== this) {
+                            if (target.classList && target.classList.contains('hotspot')) {
+                                console.log('Click was on hotspot in task 3, ignoring image container handler');
+                                return; // Let the hotspot handler deal with it
+                            }
+                            target = target.parentElement;
+                        }
+                        
+                        // Click was on non-hotspot area, play notDiff audio
+                        console.log('Clicked on non-hotspot area in task 3');
+                        const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                        notDiffAudio.play().catch(e => console.log('Audio play error:', e));
+                    });
+                }
+
+                // Start timer for third task
+                startTimer3();
+            },
+            on_finish: function() {
+                // Record final data for third task
+                jsPsych.data.addProperties({
+                    end_time_3: Date.now(),
+                    total_found_3: jsPsych.data.get().values()[0].found_differences_3.length
+                });
+            }
+        };
+        timeline.push(spot_difference_task_3);
+
+        // Fourth spot-the-difference task (bothCounterLeft/bothCounterRight)
+        const spot_difference_task_4 = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function() {
+                console.log('Rendering fourth spot-the-difference task...');
+                const imageWidth = 1742;
+                const imageHeight = 1388;
+                return `
+                    <div class="image-comparison">
+                        <div class="image-container">
+                            <img src="img/bothCounterLeft.png${cacheBuster}" class="comparison-image" alt="Original">
+                        </div>
+                        <div class="image-container">
+                            <div style="position: relative; display: inline-block;">
+                                <img src="img/bothCounterRight.png${cacheBuster}" class="comparison-image" alt="Modified">
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 24px; color: #333; font-weight: 900; text-shadow: 0 0 2px #333;">⬇</div>
+                                ${differences4.map(diff => {
+                                    const xOffset = (diff.size / 2) / imageWidth * 100;
+                                    const yOffset = (diff.size / 2) / imageHeight * 100;
+                                    return `
+                                        <div class="hotspot ${diff.found ? 'found' : ''}" 
+                                             id="hotspot4-${diff.id}"
+                                             style="left: calc(${diff.x}% - ${xOffset}%); top: calc(${diff.y}% - ${yOffset}%); width: ${diff.size}px; height: ${diff.size}px;"
+                                             data-id="${diff.id}">
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer" id="timer4">60</div>
+                `;
+            },
+            choices: [], // No buttons, we'll handle clicks manually
+            trial_duration: 60000, // 60 seconds
+            on_load: function() {
+                console.log('Fourth spot-the-difference task loaded, setting up click handlers...');
+                
+                // Initialize state for fourth task
+                jsPsych.data.addProperties({
+                    found_differences_4: [],
+                    start_time_4: Date.now()
+                });
+
+                // Add click handlers to hotspots
+                const hotspots = document.querySelectorAll('.hotspot');
+                console.log('Found', hotspots.length, 'hotspots to add click handlers to in task 4');
+                
+                if (hotspots.length === 0) {
+                    console.error('No hotspots found in task 4! Check if the HTML is rendered correctly.');
+                }
+                
+                hotspots.forEach((hotspot, index) => {
+                    console.log(`Adding click handler to hotspot ${index} in task 4:`, hotspot);
+                    hotspot.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        console.log('Hotspot clicked in task 4!', this);
+                        const diffId = this.getAttribute('data-id');
+                        handleHotspotClick4(diffId, this);
+                    });
+                });
+                
+                // Add click handler to the div containing the right image and hotspots
+                const rightImageContainer = document.querySelector('.image-container:last-child div');
+                console.log('Adding click handler to right image container in task 4:', rightImageContainer);
+                
+                if (!rightImageContainer) {
+                    console.error('Right image container not found in task 4!');
+                } else {
+                    rightImageContainer.addEventListener('click', function(e) {
+                        console.log('Image container clicked in task 4, target:', e.target);
+                        
+                        // Check if the click was on a hotspot or any of its children
+                        let target = e.target;
+                        while (target && target !== this) {
+                            if (target.classList && target.classList.contains('hotspot')) {
+                                console.log('Click was on hotspot in task 4, ignoring image container handler');
+                                return; // Let the hotspot handler deal with it
+                            }
+                            target = target.parentElement;
+                        }
+                        
+                        // Click was on non-hotspot area, play notDiff audio
+                        console.log('Clicked on non-hotspot area in task 4');
+                        const notDiffAudio = new Audio('mp3/notDiff.mp3' + cacheBuster);
+                        notDiffAudio.play().catch(e => console.log('Audio play error:', e));
+                    });
+                }
+
+                // Start timer for fourth task
+                startTimer4();
+            },
+            on_finish: function() {
+                // Record final data for fourth task
+                jsPsych.data.addProperties({
+                    end_time_4: Date.now(),
+                    total_found_4: jsPsych.data.get().values()[0].found_differences_4.length
+                });
+            }
+        };
+        timeline.push(spot_difference_task_4);
+
         // Completion message
         const completion = {
             type: jsPsychHtmlButtonResponse,
@@ -567,6 +795,160 @@
         // Timer function for second task
         function startTimer2() {
             const timerElement = document.getElementById('timer2');
+            const startTime = Date.now();
+            const duration = 60000; // 60 seconds
+
+            const timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+                
+                timerElement.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    jsPsych.finishTrial();
+                }
+            }, 1000);
+        }
+
+        // Function to handle hotspot clicks for third task
+        function handleHotspotClick3(diffId, hotspotElement) {
+            const currentData = jsPsych.data.get().values()[0];
+            const foundDifferences = currentData.found_differences_3 || [];
+            const diff = differences3.find(d => d.id == diffId);
+            
+            if (!diff) {
+                return;
+            }
+            
+            const isFirstClick = !foundDifferences.includes(diffId);
+            
+            if (isFirstClick) {
+                // First time clicking this difference
+                foundDifferences.push(diffId);
+                diff.found = true;
+                hotspotElement.classList.add('found');
+                
+                // Play correct audio
+                const audio = new Audio('mp3/correct.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    found_differences_3: foundDifferences,
+                    last_clicked_3: diffId,
+                    click_time_3: Date.now(),
+                    was_first_click_3: true
+                });
+                
+                console.log(`First click on difference ${diffId} in task 3. Total found: ${foundDifferences.length}`);
+            } else {
+                // Already clicked this difference
+                
+                // Play "got it already" audio
+                const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    last_clicked_3: diffId,
+                    click_time_3: Date.now(),
+                    was_first_click_3: false
+                });
+                
+                console.log(`Repeat click on difference ${diffId} in task 3. Total found: ${foundDifferences.length}`);
+            }
+            
+            // Check if all differences are found
+            if (foundDifferences.length === 6) {
+                console.log('All 6 differences found in task 3! Ending trial early.');
+                // End the trial early when all differences are found
+                setTimeout(() => {
+                    jsPsych.finishTrial();
+                }, 1000); // Wait 1 second to let the audio play
+            }
+        }
+
+        // Timer function for third task
+        function startTimer3() {
+            const timerElement = document.getElementById('timer3');
+            const startTime = Date.now();
+            const duration = 60000; // 60 seconds
+
+            const timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+                
+                timerElement.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    jsPsych.finishTrial();
+                }
+            }, 1000);
+        }
+
+        // Function to handle hotspot clicks for fourth task
+        function handleHotspotClick4(diffId, hotspotElement) {
+            const currentData = jsPsych.data.get().values()[0];
+            const foundDifferences = currentData.found_differences_4 || [];
+            const diff = differences4.find(d => d.id == diffId);
+            
+            if (!diff) {
+                return;
+            }
+            
+            const isFirstClick = !foundDifferences.includes(diffId);
+            
+            if (isFirstClick) {
+                // First time clicking this difference
+                foundDifferences.push(diffId);
+                diff.found = true;
+                hotspotElement.classList.add('found');
+                
+                // Play correct audio
+                const audio = new Audio('mp3/correct.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    found_differences_4: foundDifferences,
+                    last_clicked_4: diffId,
+                    click_time_4: Date.now(),
+                    was_first_click_4: true
+                });
+                
+                console.log(`First click on difference ${diffId} in task 4. Total found: ${foundDifferences.length}`);
+            } else {
+                // Already clicked this difference
+                
+                // Play "got it already" audio
+                const audio = new Audio('mp3/gotItAlready.mp3' + cacheBuster);
+                audio.play().catch(e => console.log('Audio play error:', e));
+                
+                // Update data
+                jsPsych.data.addProperties({
+                    last_clicked_4: diffId,
+                    click_time_4: Date.now(),
+                    was_first_click_4: false
+                });
+                
+                console.log(`Repeat click on difference ${diffId} in task 4. Total found: ${foundDifferences.length}`);
+            }
+            
+            // Check if all differences are found
+            if (foundDifferences.length === 6) {
+                console.log('All 6 differences found in task 4! Ending trial early.');
+                // End the trial early when all differences are found
+                setTimeout(() => {
+                    jsPsych.finishTrial();
+                }, 1000); // Wait 1 second to let the audio play
+            }
+        }
+
+        // Timer function for fourth task
+        function startTimer4() {
+            const timerElement = document.getElementById('timer4');
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
 
