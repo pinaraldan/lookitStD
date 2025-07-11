@@ -235,6 +235,75 @@
         };
         timeline.push(preload);
 
+        // Demographic information collection
+        const demographics = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div class="instructions">
+                    <h2>Welcome to this activity!</h2>
+                    <p>Please tell us about yourself:</p>
+                    
+                    <div style="text-align: left; max-width: 600px; margin: 0 auto; padding: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <label for="age" style="display: block; margin-bottom: 5px; font-weight: bold;">Your age:</label>
+                            <input type="number" id="age" name="age" min="1" max="120" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label for="gender" style="display: block; margin-bottom: 5px; font-weight: bold;">Your gender:</label>
+                            <input type="text" id="gender" name="gender" placeholder="e.g., Female, Male, Non-binary, Prefer not to say" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label for="race_ethnicity" style="display: block; margin-bottom: 5px; font-weight: bold;">Your race & ethnicity:</label>
+                            <input type="text" id="race_ethnicity" name="race_ethnicity" placeholder="e.g., White, Black, Hispanic, Asian, Mixed, Other" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" required>
+                        </div>
+                    </div>
+                    
+                    <p>Click "Continue" when you have filled in all the information.</p>
+                </div>
+            `,
+            choices: ['Continue'],
+            on_load: function() {
+                // Add event listener to validate form before allowing continue
+                const continueButton = document.querySelector('#jspsych-html-button-response-btngroup button');
+                const ageInput = document.getElementById('age');
+                const genderInput = document.getElementById('gender');
+                const raceInput = document.getElementById('race_ethnicity');
+                
+                continueButton.disabled = true;
+                continueButton.style.opacity = '0.5';
+                
+                function validateForm() {
+                    const ageValid = ageInput.value && ageInput.value > 0 && ageInput.value <= 120;
+                    const genderValid = genderInput.value.trim().length > 0;
+                    const raceValid = raceInput.value.trim().length > 0;
+                    
+                    if (ageValid && genderValid && raceValid) {
+                        continueButton.disabled = false;
+                        continueButton.style.opacity = '1';
+                    } else {
+                        continueButton.disabled = true;
+                        continueButton.style.opacity = '0.5';
+                    }
+                }
+                
+                ageInput.addEventListener('input', validateForm);
+                genderInput.addEventListener('input', validateForm);
+                raceInput.addEventListener('input', validateForm);
+                
+                // Store the data when continue is clicked
+                continueButton.addEventListener('click', function() {
+                    jsPsych.data.addProperties({
+                        participant_age: ageInput.value,
+                        participant_gender: genderInput.value.trim(),
+                        participant_race_ethnicity: raceInput.value.trim()
+                    });
+                });
+            }
+        };
+        timeline.push(demographics);
+
         // Instructions
         const instructions = {
             type: jsPsychHtmlButtonResponse,
