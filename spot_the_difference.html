@@ -96,39 +96,39 @@
         
         // Define differences for each trial
         const differences = [
-            { id: 1, x: 15, y: 25, size: 30, found: false },
-            { id: 2, x: 45, y: 35, size: 25, found: false },
-            { id: 3, x: 75, y: 45, size: 35, found: false },
-            { id: 4, x: 25, y: 65, size: 30, found: false },
-            { id: 5, x: 55, y: 75, size: 25, found: false },
-            { id: 6, x: 85, y: 85, size: 30, found: false }
+            { id: 1, x: 1, y: 37, size: 50, found: false },
+            { id: 2, x: 4, y: 10, size: 40, found: false },
+            { id: 3, x: 25, y: 26, size: 40, found: false },
+            { id: 4, x: 70, y: 37, size: 40, found: false },
+            { id: 5, x: 86, y: 38, size: 40, found: false },
+            { id: 6, x: 95, y: 11, size: 40, found: false }
         ];
 
         const differencesA = [
-            { id: 1, x: 20, y: 30, size: 30, found: false },
-            { id: 2, x: 50, y: 40, size: 25, found: false },
-            { id: 3, x: 80, y: 50, size: 35, found: false },
-            { id: 4, x: 30, y: 70, size: 30, found: false },
-            { id: 5, x: 60, y: 80, size: 25, found: false },
-            { id: 6, x: 90, y: 90, size: 30, found: false }
+            { id: 1, x: 17, y: 43, size: 40, found: false },
+            { id: 2, x: 2, y: 12, size: 65, found: false },
+            { id: 3, x: 29, y: 30, size: 40, found: false },
+            { id: 4, x: 73, y: 24, size: 45, found: false },
+            { id: 5, x: 64, y: 17,  size: 40, found: false },
+            { id: 6, x: 91, y: 49, size: 60, found: false }
         ];
 
         const differencesB = [
-            { id: 1, x: 25, y: 35, size: 30, found: false },
-            { id: 2, x: 55, y: 45, size: 25, found: false },
-            { id: 3, x: 85, y: 55, size: 35, found: false },
-            { id: 4, x: 35, y: 75, size: 30, found: false },
-            { id: 5, x: 65, y: 85, size: 25, found: false },
-            { id: 6, x: 95, y: 95, size: 30, found: false }
+            { id: 1, x: 1, y: 54, size: 40, found: false },
+            { id: 2, x: 9, y: 28, size: 55, found: false },
+            { id: 3, x: 24, y: 38, size: 40, found: false },
+            { id: 4, x: 53, y: 47, size: 65, found: false },
+            { id: 5, x: 68, y: 40, size: 50, found: false },
+            { id: 6, x: 79, y: 41, size: 40, found: false }
         ];
 
         const differences4 = [
-            { id: 1, x: 30, y: 40, size: 30, found: false },
-            { id: 2, x: 60, y: 50, size: 25, found: false },
-            { id: 3, x: 90, y: 60, size: 35, found: false },
-            { id: 4, x: 40, y: 80, size: 30, found: false },
-            { id: 5, x: 70, y: 90, size: 25, found: false },
-            { id: 6, x: 100, y: 100, size: 30, found: false }
+            { id: 1, x: 2, y: 49, size: 40, found: false },
+            { id: 2, x: 27, y: 50, size: 55, found: false },
+            { id: 3, x: 18, y: 17, size: 40, found: false },
+            { id: 4, x: 67, y: 17, size: 40, found: false },
+            { id: 5, x: 79, y: 40, size: 40, found: false },
+            { id: 6, x: 90, y: 18, size: 50, found: false }
         ];
 
         // Create timeline
@@ -262,7 +262,7 @@
                 <div class="instructions">
                     <h2>Spot the Difference</h2>
                     <p>Look at the two images side by side and find the differences!</p>
-                    <p>Click on the differences in the right image to mark them as found.</p>
+                    <p>Click on the differences in the <strong>right</strong> image to mark them as found.</p>
                     <p>You have 60 seconds to find all 6 differences.</p>
                     <p>Click "Start" to begin.</p>
                 </div>
@@ -706,7 +706,9 @@
             on_finish: function() {
                 console.log('Data download screen finished');
                 // If they clicked the button, download again
-                if (jsPsych.data.get().lastResponse() === 0) {
+                const currentData = jsPsych.data.get().values()[0];
+                const lastResponse = currentData.lastResponse;
+                if (lastResponse && lastResponse.response === 0) {
                     console.log('User clicked download again button');
                     const statusText = document.getElementById('status-text');
                     if (statusText) statusText.textContent = 'Downloading again...';
@@ -1001,6 +1003,9 @@
                     jsPsych.finishTrial();
                 }
             }, 1000);
+            
+            // Store timer reference for debugging
+            window.trial4Timer = timer;
         }
 
         // Custom function to download data as CSV with organized structure
