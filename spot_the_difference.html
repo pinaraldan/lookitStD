@@ -1068,9 +1068,46 @@
                     organizedData.push(participant);
                 });
                 
-                // Create CSV with organized headers
+                // Create CSV with organized headers and descriptions
                 const headers = Object.keys(organizedData[0]);
-                let csv = headers.join(',') + '\\n';
+                const headerDescriptions = {
+                    'Participant_ID': 'Unique 6-digit participant identifier',
+                    'Age': 'Participant age in years',
+                    'Gender': 'Participant gender (self-reported)',
+                    'Race_Ethnicity': 'Participant race/ethnicity (self-reported)',
+                    'Experiment_Date': 'Date when experiment was completed',
+                    'Trial1_Differences_Found': 'Number of differences found in Trial 1 (0-6)',
+                    'Trial1_Completion_Time_Seconds': 'Time to complete Trial 1 in seconds',
+                    'Trial1_All_Differences_Found': 'Whether all 6 differences were found in Trial 1 (Yes/No)',
+                    'Trial1_Accuracy_Percentage': 'Percentage of differences found in Trial 1 (0-100%)',
+                    'TrialA_Differences_Found': 'Number of differences found in Trial A (0-6)',
+                    'TrialA_Completion_Time_Seconds': 'Time to complete Trial A in seconds',
+                    'TrialA_All_Differences_Found': 'Whether all 6 differences were found in Trial A (Yes/No)',
+                    'TrialA_Accuracy_Percentage': 'Percentage of differences found in Trial A (0-100%)',
+                    'TrialB_Differences_Found': 'Number of differences found in Trial B (0-6)',
+                    'TrialB_Completion_Time_Seconds': 'Time to complete Trial B in seconds',
+                    'TrialB_All_Differences_Found': 'Whether all 6 differences were found in Trial B (Yes/No)',
+                    'TrialB_Accuracy_Percentage': 'Percentage of differences found in Trial B (0-100%)',
+                    'Trial4_Differences_Found': 'Number of differences found in Trial 4 (0-6)',
+                    'Trial4_Completion_Time_Seconds': 'Time to complete Trial 4 in seconds',
+                    'Trial4_All_Differences_Found': 'Whether all 6 differences were found in Trial 4 (Yes/No)',
+                    'Trial4_Accuracy_Percentage': 'Percentage of differences found in Trial 4 (0-100%)',
+                    'Total_Differences_Found': 'Total differences found across all 4 trials (0-24)',
+                    'Average_Accuracy_Percentage': 'Average accuracy across all 4 trials (0-100%)',
+                    'Trials_Completed_Perfectly': 'Number of trials with perfect scores (0-4)',
+                    'Trial1_Found_Differences_List': 'Specific differences found in Trial 1 (semicolon-separated)',
+                    'TrialA_Found_Differences_List': 'Specific differences found in Trial A (semicolon-separated)',
+                    'TrialB_Found_Differences_List': 'Specific differences found in Trial B (semicolon-separated)',
+                    'Trial4_Found_Differences_List': 'Specific differences found in Trial 4 (semicolon-separated)'
+                };
+                
+                // Create header row with descriptions
+                let csv = 'Column Name,Description\\n';
+                headers.forEach(header => {
+                    csv += `"${header}","${headerDescriptions[header]}"\\n`;
+                });
+                csv += '\\n'; // Empty row separator
+                csv += headers.join(',') + '\\n'; // Data headers
                 
                 organizedData.forEach(row => {
                     const rowData = headers.map(header => {
