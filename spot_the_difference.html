@@ -683,7 +683,13 @@
                 startTimer4();
             },
             on_finish: function() {
-                console.log('Fourth trial finished - recording final data');
+                console.log('Fourth trial finished - recording final data [on_finish]');
+                console.log('DEBUG: on_finish called - checking if timer is still running...');
+                if (window.trial4Timer) {
+                    console.log('DEBUG: Timer is still running, clearing it...');
+                    clearInterval(window.trial4Timer);
+                    window.trial4Timer = null;
+                }
                 jsPsych.data.addProperties({
                     end_time_4: Date.now(),
                     total_found_4: jsPsych.data.get().values()[0].found_differences_4.length
@@ -952,9 +958,9 @@
             }
             
             if (foundDifferences.length === 6) {
-                console.log('All 6 differences found in trial 4! Ending trial early.');
+                console.log('All 6 differences found in trial 4! Ending trial early. [hotspot handler]');
                 setTimeout(() => {
-                    console.log('Calling jsPsych.finishTrial() for trial 4 - all differences found');
+                    console.log('Calling jsPsych.finishTrial() for trial 4 - all differences found [hotspot handler]');
                     jsPsych.finishTrial();
                 }, 1000);
             }
@@ -963,11 +969,22 @@
         // Timer functions
         function startTimer1() {
             const timerElement = document.getElementById('timer1');
+            if (!timerElement) {
+                console.log('Timer element for trial 1 not found - trial may have ended');
+                return;
+            }
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
             console.log('Starting timer for trial 1 - 60 seconds');
 
             const timer = setInterval(() => {
+                // Check if timer element still exists (trial might have ended)
+                if (!document.getElementById('timer1')) {
+                    console.log('Timer element for trial 1 no longer exists - clearing timer');
+                    clearInterval(timer);
+                    return;
+                }
+                
                 const elapsed = Date.now() - startTime;
                 const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
                 
@@ -979,15 +996,29 @@
                     jsPsych.finishTrial();
                 }
             }, 1000);
+            
+            // Store timer reference for debugging
+            window.trial1Timer = timer;
         }
 
         function startTimerA() {
             const timerElement = document.getElementById('timerA');
+            if (!timerElement) {
+                console.log('Timer element for trial A not found - trial may have ended');
+                return;
+            }
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
             console.log('Starting timer for trial A - 60 seconds');
 
             const timer = setInterval(() => {
+                // Check if timer element still exists (trial might have ended)
+                if (!document.getElementById('timerA')) {
+                    console.log('Timer element for trial A no longer exists - clearing timer');
+                    clearInterval(timer);
+                    return;
+                }
+                
                 const elapsed = Date.now() - startTime;
                 const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
                 
@@ -999,15 +1030,29 @@
                     jsPsych.finishTrial();
                 }
             }, 1000);
+            
+            // Store timer reference for debugging
+            window.trialATimer = timer;
         }
 
         function startTimerB() {
             const timerElement = document.getElementById('timerB');
+            if (!timerElement) {
+                console.log('Timer element for trial B not found - trial may have ended');
+                return;
+            }
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
             console.log('Starting timer for trial B - 60 seconds');
 
             const timer = setInterval(() => {
+                // Check if timer element still exists (trial might have ended)
+                if (!document.getElementById('timerB')) {
+                    console.log('Timer element for trial B no longer exists - clearing timer');
+                    clearInterval(timer);
+                    return;
+                }
+                
                 const elapsed = Date.now() - startTime;
                 const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
                 
@@ -1019,23 +1064,36 @@
                     jsPsych.finishTrial();
                 }
             }, 1000);
+            
+            // Store timer reference for debugging
+            window.trialBTimer = timer;
         }
 
         function startTimer4() {
             const timerElement = document.getElementById('timer4');
+            if (!timerElement) {
+                console.log('Timer element for trial 4 not found - trial may have ended');
+                return;
+            }
             const startTime = Date.now();
             const duration = 60000; // 60 seconds
             console.log('Starting timer for trial 4 - 60 seconds');
 
             const timer = setInterval(() => {
+                // Check if timer element still exists (trial might have ended)
+                if (!document.getElementById('timer4')) {
+                    console.log('Timer element for trial 4 no longer exists - clearing timer');
+                    clearInterval(timer);
+                    return;
+                }
+                
                 const elapsed = Date.now() - startTime;
                 const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
-                
                 timerElement.textContent = remaining;
-                
+                console.log(`[TIMER4] Countdown: ${remaining} seconds left`);
                 if (remaining <= 0) {
                     clearInterval(timer);
-                    console.log('Timer expired for trial 4 - calling jsPsych.finishTrial()');
+                    console.log('Timer expired for trial 4 - calling jsPsych.finishTrial() [timer]');
                     jsPsych.finishTrial();
                 }
             }, 1000);
